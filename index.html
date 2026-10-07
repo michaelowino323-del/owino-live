@@ -102,5 +102,20 @@
     <button class="start">Get Started</button>
   </main>
 
+  <script type="module">
+    import { createClient } from
+      "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+    const SUPABASE_URL = https://smnqrqsxtqfsigbpvjxv.supabase.co
+    const SUPABASE_PUBLISHABLE_KEY = sb_publishable_hGkJGiIjgHZd09I6VI7y6g_EtwHQgVx
+
+    const supabase = createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
+    );
+
+    console.log("Owino Live connected to Supabase");
+  </script>
+
 </body>
 </html>
