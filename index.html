@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Owino Live</title>
 
   <style>
@@ -41,7 +42,7 @@
     button {
       border: none;
       border-radius: 8px;
-      padding: 10px 16px;
+      padding: 11px 17px;
       font-weight: bold;
       cursor: pointer;
     }
@@ -51,7 +52,8 @@
       color: white;
     }
 
-    .signup {
+    .signup,
+    .primary {
       background: #ff3b81;
       color: white;
     }
@@ -78,6 +80,77 @@
       font-size: 17px;
       padding: 14px 28px;
     }
+
+    .page {
+      display: none;
+      min-height: calc(100vh - 75px);
+      padding: 40px 20px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .page.active {
+      display: flex;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 420px;
+      background: #151520;
+      padding: 30px;
+      border-radius: 16px;
+      border: 1px solid #292936;
+    }
+
+    .card h2 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .card .subtitle {
+      text-align: center;
+      margin-bottom: 25px;
+      font-size: 14px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 14px;
+    }
+
+    input {
+      width: 100%;
+      padding: 13px;
+      margin-bottom: 18px;
+      border-radius: 8px;
+      border: 1px solid #333341;
+      background: #0d0d14;
+      color: white;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #ff3b81;
+    }
+
+    .full {
+      width: 100%;
+    }
+
+    .back {
+      background: transparent;
+      color: #aaa;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    #message {
+      margin-top: 15px;
+      text-align: center;
+      font-size: 14px;
+      min-height: 20px;
+    }
   </style>
 </head>
 
@@ -87,34 +160,327 @@
     <div class="logo">Owino Live</div>
 
     <div class="buttons">
-      <button class="login">Login</button>
-      <button class="signup">Sign Up</button>
+      <button class="login" id="loginButton">Login</button>
+      <button class="signup" id="signupButton">Sign Up</button>
     </div>
   </header>
 
-  <main>
-    <h1>Welcome to Owino Live</h1>
 
-    <p>
-      Go live. Share videos. Connect with people. Earn from your content.
-    </p>
+  <!-- HOME -->
 
-    <button class="start">Get Started</button>
-  </main>
+  <section id="homePage" class="page active">
+
+    <main>
+
+      <h1>Welcome to Owino Live</h1>
+
+      <p>
+        Go live. Share videos. Connect with people. Earn from your content.
+      </p>
+
+      <button class="start" id="startButton">
+        Get Started
+      </button>
+
+    </main>
+
+  </section>
+
+
+  <!-- SIGN UP -->
+
+  <section id="signupPage" class="page">
+
+    <div class="card">
+
+      <h2>Create Account</h2>
+
+      <p class="subtitle">
+        Join Owino Live today
+      </p>
+
+      <form id="signupForm">
+
+        <label for="username">
+          Username
+        </label>
+
+        <input
+          id="username"
+          type="text"
+          placeholder="Choose a username"
+          required
+        >
+
+        <label for="email">
+          Email
+        </label>
+
+        <input
+          id="email"
+          type="email"
+          placeholder="Enter your email"
+          required
+        >
+
+        <label for="password">
+          Password
+        </label>
+
+        <input
+          id="password"
+          type="password"
+          placeholder="Create a password"
+          minlength="6"
+          required
+        >
+
+        <button
+          type="submit"
+          class="primary full"
+          id="createAccountButton"
+        >
+          Create Account
+        </button>
+
+        <button
+          type="button"
+          class="back"
+          id="backButton"
+        >
+          ← Back to Owino Live
+        </button>
+
+        <div id="message"></div>
+
+      </form>
+
+    </div>
+
+  </section>
+
 
   <script type="module">
+
     import { createClient } from
       "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
-    const SUPABASE_URL = https://smnqrqsxtqfsigbpvjxv.supabase.co
-    const SUPABASE_PUBLISHABLE_KEY = sb_publishable_hGkJGiIjgHZd09I6VI7y6g_EtwHQgVx
+
+    // YOUR SUPABASE INFORMATION
+
+    const SUPABASE_URL =
+      "https://smnqrqsxtqfsigbpvjxv.supabase.co";
+
+    const SUPABASE_PUBLISHABLE_KEY =
+      "sb_publishable_hGkJGiIjgHZd09I6VI7y6g_EtwHQgVx";
+
 
     const supabase = createClient(
       SUPABASE_URL,
       SUPABASE_PUBLISHABLE_KEY
     );
 
-    console.log("Owino Live connected to Supabase");
+
+    // PAGE ELEMENTS
+
+    const homePage =
+      document.getElementById("homePage");
+
+    const signupPage =
+      document.getElementById("signupPage");
+
+    const signupButton =
+      document.getElementById("signupButton");
+
+    const loginButton =
+      document.getElementById("loginButton");
+
+    const startButton =
+      document.getElementById("startButton");
+
+    const backButton =
+      document.getElementById("backButton");
+
+    const signupForm =
+      document.getElementById("signupForm");
+
+    const message =
+      document.getElementById("message");
+
+    const createAccountButton =
+      document.getElementById("createAccountButton");
+
+
+    // SHOW SIGN UP PAGE
+
+    function showSignup() {
+
+      homePage.classList.remove("active");
+
+      signupPage.classList.add("active");
+
+      message.textContent = "";
+
+      window.scrollTo(0, 0);
+    }
+
+
+    // SHOW HOME PAGE
+
+    function showHome() {
+
+      signupPage.classList.remove("active");
+
+      homePage.classList.add("active");
+
+      message.textContent = "";
+
+      window.scrollTo(0, 0);
+    }
+
+
+    signupButton.addEventListener(
+      "click",
+      showSignup
+    );
+
+
+    startButton.addEventListener(
+      "click",
+      showSignup
+    );
+
+
+    backButton.addEventListener(
+      "click",
+      showHome
+    );
+
+
+    // LOGIN FOR NOW
+
+    loginButton.addEventListener(
+      "click",
+      () => {
+
+        alert(
+          "Login will be added next."
+        );
+
+      }
+    );
+
+
+    // CREATE ACCOUNT
+
+    signupForm.addEventListener(
+      "submit",
+      async (event) => {
+
+        event.preventDefault();
+
+
+        const username =
+          document
+            .getElementById("username")
+            .value
+            .trim();
+
+
+        const email =
+          document
+            .getElementById("email")
+            .value
+            .trim();
+
+
+        const password =
+          document
+            .getElementById("password")
+            .value;
+
+
+        if (!username || !email || !password) {
+
+          message.textContent =
+            "Please fill in all fields.";
+
+          return;
+        }
+
+
+        createAccountButton.disabled =
+          true;
+
+        createAccountButton.textContent =
+          "Creating account...";
+
+        message.textContent = "";
+
+
+        try {
+
+          const { data, error } =
+            await supabase.auth.signUp({
+
+              email: email,
+
+              password: password,
+
+              options: {
+
+                data: {
+                  username: username
+                },
+
+                emailRedirectTo:
+                  window.location.origin +
+                  window.location.pathname
+
+              }
+
+            });
+
+
+          if (error) {
+
+            message.textContent =
+              error.message;
+
+            return;
+          }
+
+
+          if (data.user) {
+
+            message.textContent =
+              "Account created! Check your email to confirm your account.";
+
+            signupForm.reset();
+
+          }
+
+
+        } catch (error) {
+
+          message.textContent =
+            "Connection error. Please try again.";
+
+          console.error(error);
+
+        } finally {
+
+          createAccountButton.disabled =
+            false;
+
+          createAccountButton.textContent =
+            "Create Account";
+
+        }
+
+      }
+    );
+
   </script>
 
 </body>
